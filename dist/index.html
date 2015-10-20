@@ -1,0 +1,28 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>index</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/build_index.css">
+
+    <script src="js/build_index.js"></script>
+
+    <script type="text/javascript" src="https://skyway.io/dist/0.3/peer.js" charset="UTF-8"></script>
+
+</head>
+<body>
+</body>
+<script type="text/javascript">
+
+    window.onload = function(){
+        var index = new Vehicle.Index();
+        index.listItems(function(elements){
+            $("body").html(elements);
+        });
+    };
+
+</script>
+
+</html>

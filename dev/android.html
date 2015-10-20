@@ -1,0 +1,85 @@
+<html>
+<head>
+    <title>Romoアプリ</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <!-- build:css css/build_android.css -->
+    <link href="bower_components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bower_components/fontawesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/android.css" rel="stylesheet">
+    <!-- endbuild -->
+
+    <!-- build:js js/build_android.js -->
+    <script type="text/javascript" src="bower_components/eventemitter2/eventemitter2.js"></script>
+    <script type="text/javascript" src="bower_components/lodash/lodash.compat.js"></script>
+    <script type="text/javascript" src="bower_components/jquery/jquery.js"></script>
+    <script type="text/javascript" src="js/views/Inputs/UserInputs.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/views/Inputs/VehicleMessage.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/views/Inputs/Gamepad.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/views/Inputs/Keyboard.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/views/Inputs/RaceDashboard.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/views/Inputs/AndroidUserView.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/models/PeerManager.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/controllers/AndroidMainController.js" charset="UTF-8"></script>
+    <!-- endbuild -->
+
+    <script type="text/javascript" src="https://skyway.io/dist/0.3/peer.js" charset="UTF-8"></script>
+
+
+</head>
+
+<body oncontextmenu='return false;' oncopy='return false;'>
+<div id="race-window">
+    <div id="top">
+        <div id="top-left">
+            <img src="./img/gallery.png" id="Gallery" class="top-icon" />
+            <img src="./img/camera.png" id="Shot" class="top-icon" />
+        </div>
+        <div id="top-right">
+            <img src="./img/front-camera-android.png" id="SwitchCamera" class="vehicle-control-btn top-icon" name="Front" />
+            <img src="./img/mic-on-android.png" id="Mic" class="vehicle-control-btn top-icon" name="ON" />
+            <img src="./img/parking.png" id="Button1" class="vehicle-control-btn top-icon" name="Parking" style="display: none" />
+            <img src="./img/camera-icon.png" id="Romo" class="vehicle-control-btn top-icon" name="Camera" />
+        </div>
+    </div>
+    <video id="remote-video" autoplay></video>
+    <div id="controller">
+        <div id="left" class="arrow" ><img src="./img/arrow-left.png"></div>
+        <div id="right" class="arrow" ><img src="./img/arrow-left.png"></div>
+        <div id="front" class="arrow" ><img src="./img/arrow-front.png"></div>
+        <div id="back" class="arrow" ><img src="./img/arrow-front.png"></div>
+    </div>
+    <div id="local-trim">
+        <video id="local-video" muted="true" autoplay></video>
+        <img id="romo-view" src="./img/romo.png" style="display:none">
+    </div>
+    <div id="photo-div" style="display: none">
+        <canvas id="tmp-canvas" style="display:none"></canvas>
+        <div id="photo-lib"></div>
+    </div>
+
+</div>
+<script type="text/javascript">
+
+    window.onload = function(){
+        $("#local-video").on("playing",function(){
+            local_video_reflow();
+        });
+
+        var controller_video = new Vehicle.AndroidMainController("video",$("#local-video"),$("#remote-video"));
+    };
+
+    function local_video_reflow(){
+        var $local = $("#local-video");
+        var asp = $local[0].videoWidth / $local[0].videoHeight;
+        var trim_x = ((16 * asp) - 9) / 2 * -1 + "vh";
+        $local.css("left",trim_x);
+    }
+
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,128 @@
+<html>
+<head>
+    <title>Romoアプリ</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <!-- build:css css/build_all.css -->
+    <link href="bower_components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bower_components/fontawesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/all.css" rel="stylesheet">
+    <!-- endbuild -->
+
+    <!-- build:js js/build_all.js -->
+    <script type="text/javascript" src="bower_components/eventemitter2/eventemitter2.js"></script>
+    <script type="text/javascript" src="bower_components/lodash/lodash.compat.js"></script>
+    <script type="text/javascript" src="bower_components/jquery/jquery.js"></script>
+    <script type="text/javascript" src="js/views/Inputs/UserInputs.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/views/Inputs/VehicleMessage.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/views/Inputs/Gamepad.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/views/Inputs/Keyboard.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/views/Inputs/RaceDashboard.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/views/Inputs/MainUserView.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/models/PeerManager.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/controllers/MainController.js" charset="UTF-8"></script>
+    <!-- endbuild -->
+
+    <script type="text/javascript" src="https://skyway.io/dist/0.3/peer.js" charset="UTF-8"></script>
+
+
+</head>
+
+<body>
+<div id="main">
+    <div id="race-window">
+        <video id="remote-video" autoplay></video>
+        <div id="local-trim">
+            <video id="local-video" muted="true" autoplay></video>
+            <img id="romo-view" src="./img/romo.png" style="display:none">
+        </div>
+        <div id="car-images">
+            <div id="top"></div>
+            <img id="wiper-left" class="wiper" src="img/wiper.png">
+            <img id="wiper-right" class="wiper" src="img/wiper.png">
+            <img id="handle" class="StopMoving" src="./img/handle.png">
+            <img id="dashboard" src="./img/dashboard-wide.png">
+            <img id="string" class="StopMoving" src="./img/string.png">
+            <img id="ios-string" src="./img/mini-string.png">
+            <img id="vehicle-string" src="./img/mini-string.png">
+            <img id="gear" src="./img/gear-0.png">
+            <div id="under"></div>
+        </div>
+    </div>
+    <div  id="main-window">
+        <div id="dashboard-controller" style="position: absolute;right: 0px;top: 0px;">
+            <button class="btn btn-sm btn-info" name="dashboard">mode: dashboard</button>
+        </div>
+        <div id="control-window">
+            <div>
+                <img src="./img/camera-icon.png" id="Romo" class="vehicle-control-btn" name="Camera" style="height: 80px;" />
+                <img src="./img/parking.png" id="Button1" class="vehicle-control-btn" name="Parking" style="height: 80px;display: none" />
+                <img src="./img/front-camera.png" id="SwitchCamera" class="vehicle-control-btn" name="Front" style="height: 80px;" />
+                <img src="./img/mic-on.png" id="Mic" class="vehicle-control-btn" name="ON" style="height: 80px;" />
+                <img src="./img/headingdown.png" id="HeadingDown" class="vehicle-control-btn head-btn" name="HeadingDown" style="height: 50px;margin-right: 5px;" />
+                <input type="range" id="HeadingtoAngle" min="0" max="1" value="1" step="0.1" style="width: 120px;display: inline;margin-right: 5px;">
+                <img src="./img/headingup.png" id="HeadingUp" class="vehicle-control-btn head-btn" name="HeadingUp" style="height: 50px; margin-right: 0;" />
+            </div>
+        </div>
+        <div id="photo-window">
+            <div id="photo-btn-window" style="width:100%;height:60px;margin:5px;">
+                <img src="./img/shot.png" id="Shot" style="width:auto;height:100%;" />
+            </div>
+            <canvas id="tmp-canvas" style="display:none"></canvas>
+            <div id="photo-lib"></div>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    window.onload = function(){
+        main_window_change_position();
+
+        $("#local-video").on("playing",function(){
+            local_video_reflow();
+        });
+
+        var controller_video = new Vehicle.MainController("video",$("#local-video"),$("#remote-video"));
+    };
+
+    var window_resize_timer = false;
+    $(window).resize(function() {
+        if (window_resize_timer !== false) {
+            clearTimeout(window_resize_timer);
+        }
+        window_resize_timer = setTimeout(function() {
+            main_window_change_position();
+        }, 100);
+    });
+
+    function main_window_change_position(){
+        var win_width=$(window).width();
+        var win_height=$(window).height();
+
+        var remote_video_height = win_width*0.5*4/3;
+        var remote_video_top = -1 * (remote_video_height - win_height);
+        $("#remote-video").css({
+            "height":remote_video_height,
+            "top": remote_video_top
+        });
+
+        var photo_window_height = win_height - 130;
+        var photo_lib_height = photo_window_height - 70 - 3;
+        $("#photo-window").css("height",photo_window_height + "px");
+        $("#photo-lib").css("height",photo_lib_height + "px");
+    }
+
+    function local_video_reflow(){
+        var $local = $("#local-video");
+        var asp = $local[0].videoWidth / $local[0].videoHeight;
+        var trim_x = ((9.6 * asp) - 5.4) / 2 * -1 + "vw";
+        $local.css("left",trim_x);
+    }
+
+
+</script>
+
+</body>
+</html>
